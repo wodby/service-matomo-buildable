@@ -1,3 +1,47 @@
 # Matomo with custom plugins service for Kubernetes on Wodby
 
 Run Matomo with your own plugins on Kubernetes with Wodby.
+
+This repository defines the Wodby service manifest for Matomo built from your
+Git repository. The repository holds only your plugins; Matomo itself comes
+from the prebuilt [`wodby/matomo`](https://github.com/wodby/matomo) image and
+keeps getting its updates.
+
+- [Browse Wodby services](https://wodby.com/services)
+- [Wodby service documentation](https://wodby.com/docs/2.0/services/)
+- [Service manifest reference](https://wodby.com/docs/2.0/services/template/)
+
+## Service overview
+
+| Property | Manifest configuration |
+| --- | --- |
+| Service name | `matomo-custom` |
+| Based on | [`matomo`](https://github.com/wodby/service-matomo): versions, links, settings, volumes, cron and resources |
+| Type | Application service |
+| Image | Built from your repository on top of [`wodby/matomo`](https://github.com/wodby/matomo) `-apache` |
+| Application build | Your plugins under `plugins/`; start from the [Matomo boilerplate](https://github.com/wodby/matomo-boilerplate) |
+| Operations | 1 action: installs or updates Matomo, then activates your plugins |
+
+Without your own plugins, use the [Matomo service](https://github.com/wodby/service-matomo) instead: it needs no
+repository or build.
+
+## Use this service
+
+Reference `matomo-custom` from a Wodby stack. A service is a reusable component
+and does not deploy by itself. The stack defines its links, settings, versions,
+resources, and relationship to the rest of the application.
+
+## Maintain a custom version
+
+1. Fork this repository.
+2. Edit the service manifest and referenced files.
+3. Import the repository as a [Git-backed service](https://wodby.com/docs/2.0/services/create/#create-a-git-backed-service).
+4. Reference the service from a stack manifest.
+
+Validate the manifest with:
+
+```bash
+wodby service validate-manifest service.yml --org <org-id>
+```
+
+See the [service manifest reference](https://wodby.com/docs/2.0/services/template/) and the [managed services index](https://github.com/wodby/services).
