@@ -1,0 +1,39 @@
+name: matomo-custom
+type: service
+icon: matomo
+title: Matomo with custom plugins
+from: matomo
+fromVersionConstraint: "^3.0.0"
+fromVersion: "3.0.1"
+guidance: GUIDANCE.md
+
+labels:
+- matomo
+
+# Builds the app repository's plugins on top of the prebuilt wodby/matomo
+# image, so Matomo itself keeps the matomo service's versions and updates.
+build:
+  connect: true
+  dockerfile: Dockerfile
+  boilerplates:
+  - name: plugins
+    title: Matomo plugins
+    repo: https://github.com/wodby/matomo-boilerplate
+    branch: main
+
+actions:
+# Installs Matomo on the first deployment and updates its database on later
+# ones, then activates the app repository's plugins and deactivates the ones
+# removed from it.
+- name: update
+  title: Install or update Matomo
+  args:
+  - matomo-update-app
+  type: post_deploy
+
+# The image is built from the app repository on top of wodby/matomo.
+workloads:
+- name: main
+  containers:
+  - name: php
+    build: true
