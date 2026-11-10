@@ -16,8 +16,8 @@ build:
   connect: true
   dockerfile: Dockerfile
   boilerplates:
-  - name: plugins
-    title: Matomo plugins
+  - name: vanilla
+    title: Vanilla Matomo
     repo: https://github.com/wodby/matomo-boilerplate
     branch: main
 
