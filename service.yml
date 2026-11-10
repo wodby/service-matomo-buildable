@@ -10,14 +10,20 @@ guidance: GUIDANCE.md
 labels:
 - matomo
 
-# Builds the app repository's plugins on top of the prebuilt wodby/matomo
-# image, so Matomo itself keeps the matomo service's versions and updates.
+# PHP versions of wodby/matomo-php: PHP-FPM and Apache with Wodby's setup for
+# Matomo, without Matomo. The build installs the Matomo release the app
+# repository pins in .matomo-version.
+options:
+- version: '8.4'
+  tag: 8.4-r0
+  default: true
+
 build:
   connect: true
   dockerfile: Dockerfile
   boilerplates:
-  - name: plugins
-    title: Matomo plugins
+  - name: vanilla
+    title: Vanilla Matomo
     repo: https://github.com/wodby/matomo-boilerplate
     branch: main
 
@@ -31,9 +37,10 @@ actions:
   - matomo-update-app
   type: post_deploy
 
-# The image is built from the app repository on top of wodby/matomo.
+# The image is built from the app repository on top of wodby/matomo-php.
 workloads:
 - name: main
   containers:
   - name: php
+    image: wodby/matomo-php
     build: true

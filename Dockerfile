@@ -1,17 +1,24 @@
-# Adds the plugins in the app repository's plugins directory to the prebuilt
-# Matomo image. Matomo itself comes from the base image, so it keeps getting
-# updates from the matomo service. The post-deployment action activates the
-# plugins listed in .app-plugins.
+# Builds Matomo from the app repository on top of wodby/matomo-php, which has
+# PHP-FPM, Apache and Wodby's setup for Matomo but no Matomo: the release named
+# in .matomo-version is installed, then the plugins in plugins/ are added and
+# listed in .app-plugins, so the post-deployment action activates them.
 ARG WODBY_BASE_IMAGE
 FROM ${WODBY_BASE_IMAGE}
 
 ARG COPY_FROM
 
-COPY --chown=wodby:wodby ${COPY_FROM}/plugins/ /tmp/app-plugins/
+COPY --chown=wodby:wodby ${COPY_FROM}/ /tmp/app/
+
+USER root
 
 RUN set -e; \
+    if [ ! -f /tmp/app/.matomo-version ]; then \
+        echo "Add .matomo-version to the repository, naming the Matomo release to run, such as 5.14.2" >&2; \
+        exit 1; \
+    fi; \
+    matomo-install-release "$(tr -d ' \t\r\n' < /tmp/app/.matomo-version)"; \
     : > "${APP_ROOT}/.app-plugins"; \
-    for dir in /tmp/app-plugins/*/; do \
+    for dir in /tmp/app/plugins/*/; do \
         [ -d "${dir}" ] || continue; \
         name=$(basename "${dir}"); \
         if [ ! -f "${dir}plugin.json" ]; then \
@@ -25,7 +32,8 @@ RUN set -e; \
         cp -a "${dir%/}" "${APP_ROOT}/plugins/${name}"; \
         echo "${name}" >> "${APP_ROOT}/.app-plugins"; \
     done; \
-    rm -rf /tmp/app-plugins; \
+    chown wodby:wodby "${APP_ROOT}/.app-plugins"; \
+    rm -rf /tmp/app; \
     printf '%s\n' \
         '#!/usr/bin/env bash' \
         '# Installs or updates Matomo, activates the plugins from the app repository' \
@@ -50,3 +58,5 @@ RUN set -e; \
         > /usr/local/bin/matomo-update-app; \
     chmod +x /usr/local/bin/matomo-update-app; \
     echo "App plugins: $(paste -sd ' ' "${APP_ROOT}/.app-plugins")"
+
+USER wodby

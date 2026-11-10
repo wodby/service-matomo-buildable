@@ -3,9 +3,9 @@
 Run Matomo with your own plugins on Kubernetes with Wodby.
 
 This repository defines the Wodby service manifest for Matomo built from your
-Git repository. The repository holds only your plugins; Matomo itself comes
-from the prebuilt [`wodby/matomo`](https://github.com/wodby/matomo) image and
-keeps getting its updates.
+Git repository. Your repository pins Matomo's version and holds your plugins;
+the build installs them on [`wodby/matomo-php`](https://github.com/wodby/matomo-php),
+which brings PHP, Apache and Wodby's setup for Matomo.
 
 - [Browse Wodby services](https://wodby.com/services)
 - [Wodby service documentation](https://wodby.com/docs/2.0/services/)
@@ -16,14 +16,15 @@ keeps getting its updates.
 | Property | Manifest configuration |
 | --- | --- |
 | Service name | `matomo-buildable` |
-| Based on | [`matomo`](https://github.com/wodby/service-matomo): versions, links, settings, volumes, cron and resources |
+| Based on | [`matomo`](https://github.com/wodby/service-matomo): links, settings, volumes, cron and resources |
+| Versions | PHP `8.4` |
 | Type | Application service |
-| Image | Built from your repository on top of [`wodby/matomo`](https://github.com/wodby/matomo) `-apache` |
-| Application build | Your plugins under `plugins/`; start from the [Matomo boilerplate](https://github.com/wodby/matomo-boilerplate) |
+| Image | Built from your repository on top of [`wodby/matomo-php`](https://github.com/wodby/matomo-php) |
+| Application build | Matomo release from `.matomo-version` and your plugins under `plugins/`; start from the [Matomo boilerplate](https://github.com/wodby/matomo-boilerplate) |
 | Operations | 1 action: installs or updates Matomo, then activates your plugins |
 
-Without your own plugins, use the [Matomo service](https://github.com/wodby/service-matomo) instead: it needs no
-repository or build.
+To have Wodby keep Matomo up to date instead, use the [Matomo service](https://github.com/wodby/service-matomo): it
+needs no repository or build.
 
 ## Use this service
 
