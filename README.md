@@ -1,4 +1,4 @@
-# Matomo with custom plugins service for Kubernetes on Wodby
+# Buildable Matomo service for Kubernetes on Wodby
 
 Run Matomo with your own plugins on Kubernetes with Wodby.
 
@@ -15,7 +15,7 @@ keeps getting its updates.
 
 | Property | Manifest configuration |
 | --- | --- |
-| Service name | `matomo-custom` |
+| Service name | `matomo-buildable` |
 | Based on | [`matomo`](https://github.com/wodby/service-matomo): versions, links, settings, volumes, cron and resources |
 | Type | Application service |
 | Image | Built from your repository on top of [`wodby/matomo`](https://github.com/wodby/matomo) `-apache` |
@@ -27,7 +27,7 @@ repository or build.
 
 ## Use this service
 
-Reference `matomo-custom` from a Wodby stack. A service is a reusable component
+Reference `matomo-buildable` from a Wodby stack. A service is a reusable component
 and does not deploy by itself. The stack defines its links, settings, versions,
 resources, and relationship to the rest of the application.
 

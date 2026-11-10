@@ -1,7 +1,7 @@
-name: matomo-custom
+name: matomo-buildable
 type: service
 icon: matomo
-title: Matomo with custom plugins
+title: Matomo (buildable)
 from: matomo
 fromVersionConstraint: "^3.0.0"
 fromVersion: "3.0.1"
