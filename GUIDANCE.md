@@ -1,4 +1,4 @@
-# Matomo with custom plugins on Wodby
+# Buildable Matomo on Wodby
 
 This service is the [matomo](https://github.com/wodby/service-matomo) service with a build: everything in its guidance
 applies, including settings, data, installation and updates. This page covers only what the build adds.
