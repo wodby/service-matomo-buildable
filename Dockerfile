@@ -1,17 +1,32 @@
-# Adds the plugins in the app repository's plugins directory to the prebuilt
-# Matomo image. Matomo itself comes from the base image, so it keeps getting
-# updates from the matomo service. The post-deployment action activates the
-# plugins listed in .app-plugins.
+# Builds Matomo from the app repository on top of the prebuilt wodby/matomo
+# image: the release named in .matomo-version replaces the image's Matomo, and
+# the plugins in plugins/ are added and listed in .app-plugins, so the
+# post-deployment action activates them. Without .matomo-version the build
+# keeps the image's Matomo.
 ARG WODBY_BASE_IMAGE
 FROM ${WODBY_BASE_IMAGE}
 
 ARG COPY_FROM
 
-COPY --chown=wodby:wodby ${COPY_FROM}/plugins/ /tmp/app-plugins/
+COPY --chown=wodby:wodby ${COPY_FROM}/ /tmp/app/
+
+USER root
 
 RUN set -e; \
+    if [ -f /tmp/app/.matomo-version ]; then \
+        version=$(tr -d ' \t\r\n' < /tmp/app/.matomo-version); \
+        if ! command -v matomo-use-release > /dev/null; then \
+            echo "This Matomo image can't use the version in .matomo-version; update the service to a newer revision" >&2; \
+            exit 1; \
+        fi; \
+        apk add --no-cache -t .gpg gnupg; \
+        matomo-use-release "${version}"; \
+        apk del --purge .gpg; \
+    else \
+        echo "No .matomo-version in the repository, so the build keeps Matomo ${MATOMO_VER}"; \
+    fi; \
     : > "${APP_ROOT}/.app-plugins"; \
-    for dir in /tmp/app-plugins/*/; do \
+    for dir in /tmp/app/plugins/*/; do \
         [ -d "${dir}" ] || continue; \
         name=$(basename "${dir}"); \
         if [ ! -f "${dir}plugin.json" ]; then \
@@ -25,7 +40,8 @@ RUN set -e; \
         cp -a "${dir%/}" "${APP_ROOT}/plugins/${name}"; \
         echo "${name}" >> "${APP_ROOT}/.app-plugins"; \
     done; \
-    rm -rf /tmp/app-plugins; \
+    chown wodby:wodby "${APP_ROOT}/.app-plugins"; \
+    rm -rf /tmp/app; \
     printf '%s\n' \
         '#!/usr/bin/env bash' \
         '# Installs or updates Matomo, activates the plugins from the app repository' \
@@ -50,3 +66,5 @@ RUN set -e; \
         > /usr/local/bin/matomo-update-app; \
     chmod +x /usr/local/bin/matomo-update-app; \
     echo "App plugins: $(paste -sd ' ' "${APP_ROOT}/.app-plugins")"
+
+USER wodby

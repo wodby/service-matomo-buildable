@@ -3,9 +3,9 @@
 Run Matomo with your own plugins on Kubernetes with Wodby.
 
 This repository defines the Wodby service manifest for Matomo built from your
-Git repository. The repository holds only your plugins; Matomo itself comes
-from the prebuilt [`wodby/matomo`](https://github.com/wodby/matomo) image and
-keeps getting its updates.
+Git repository. Your repository pins Matomo's version and holds your plugins;
+the build runs them on the prebuilt [`wodby/matomo`](https://github.com/wodby/matomo)
+image, which brings PHP, Apache and Wodby's setup.
 
 - [Browse Wodby services](https://wodby.com/services)
 - [Wodby service documentation](https://wodby.com/docs/2.0/services/)
@@ -19,11 +19,11 @@ keeps getting its updates.
 | Based on | [`matomo`](https://github.com/wodby/service-matomo): versions, links, settings, volumes, cron and resources |
 | Type | Application service |
 | Image | Built from your repository on top of [`wodby/matomo`](https://github.com/wodby/matomo) `-apache` |
-| Application build | Your plugins under `plugins/`; start from the [Matomo boilerplate](https://github.com/wodby/matomo-boilerplate) |
+| Application build | Matomo release from `.matomo-version` and your plugins under `plugins/`; start from the [Matomo boilerplate](https://github.com/wodby/matomo-boilerplate) |
 | Operations | 1 action: installs or updates Matomo, then activates your plugins |
 
-Without your own plugins, use the [Matomo service](https://github.com/wodby/service-matomo) instead: it needs no
-repository or build.
+To have Wodby keep Matomo up to date instead, use the [Matomo service](https://github.com/wodby/service-matomo): it
+needs no repository or build.
 
 ## Use this service
 

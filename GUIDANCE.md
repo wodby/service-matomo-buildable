@@ -6,12 +6,17 @@ applies, including settings, data, installation and updates. This page covers on
 ## Image
 
 The image is built from the app's Git repository on top of the prebuilt
-[wodby/matomo](https://github.com/wodby/matomo) Apache image of the selected Matomo major. The repository holds only
-the app's own plugins, under `plugins/`; start from the [Matomo boilerplate](https://github.com/wodby/matomo-boilerplate).
-Matomo's code comes from the base image, so new image revisions bring Matomo's updates without changing the repository.
+[wodby/matomo](https://github.com/wodby/matomo) Apache image of the selected Matomo major. Start the repository from the
+[Matomo boilerplate](https://github.com/wodby/matomo-boilerplate). It holds:
 
-The build copies each directory under `plugins/` into Matomo's `plugins` directory and records its name. It fails when a
-directory has no `plugin.json`, or has the name of one of Matomo's own plugins, which it would replace.
+- `.matomo-version`: the Matomo release to run, such as `5.14.2`. The build downloads it from builds.matomo.org, checks
+  its signature and puts it in place of the image's Matomo with `matomo-use-release`, keeping Wodby's additions to the
+  image. The version must belong to the selected major version. Without the file, the build keeps the image's Matomo.
+- `plugins/`: the app's own plugins. The build copies each directory into Matomo's `plugins` directory and records its
+  name. It fails when a directory has no `plugin.json`, or has the name of one of Matomo's own plugins.
+
+Matomo's version changes only when the repository changes it: new image revisions bring PHP and Apache updates, not a
+new Matomo. Upgrading Matomo means changing `.matomo-version` and deploying; the deployment updates the database.
 
 ## Plugins
 
