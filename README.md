@@ -4,8 +4,8 @@ Run Matomo with your own plugins on Kubernetes with Wodby.
 
 This repository defines the Wodby service manifest for Matomo built from your
 Git repository. Your repository pins Matomo's version and holds your plugins;
-the build runs them on the prebuilt [`wodby/matomo`](https://github.com/wodby/matomo)
-image, which brings PHP, Apache and Wodby's setup.
+the build installs them on [`wodby/matomo-php`](https://github.com/wodby/matomo-php),
+which brings PHP, Apache and Wodby's setup for Matomo.
 
 - [Browse Wodby services](https://wodby.com/services)
 - [Wodby service documentation](https://wodby.com/docs/2.0/services/)
@@ -16,9 +16,10 @@ image, which brings PHP, Apache and Wodby's setup.
 | Property | Manifest configuration |
 | --- | --- |
 | Service name | `matomo-buildable` |
-| Based on | [`matomo`](https://github.com/wodby/service-matomo): versions, links, settings, volumes, cron and resources |
+| Based on | [`matomo`](https://github.com/wodby/service-matomo): links, settings, volumes, cron and resources |
+| Versions | PHP `8.4` |
 | Type | Application service |
-| Image | Built from your repository on top of [`wodby/matomo`](https://github.com/wodby/matomo) `-apache` |
+| Image | Built from your repository on top of [`wodby/matomo-php`](https://github.com/wodby/matomo-php) |
 | Application build | Matomo release from `.matomo-version` and your plugins under `plugins/`; start from the [Matomo boilerplate](https://github.com/wodby/matomo-boilerplate) |
 | Operations | 1 action: installs or updates Matomo, then activates your plugins |
 

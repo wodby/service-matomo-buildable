@@ -1,8 +1,7 @@
-# Builds Matomo from the app repository on top of the prebuilt wodby/matomo
-# image: the release named in .matomo-version replaces the image's Matomo, and
-# the plugins in plugins/ are added and listed in .app-plugins, so the
-# post-deployment action activates them. Without .matomo-version the build
-# keeps the image's Matomo.
+# Builds Matomo from the app repository on top of wodby/matomo-php, which has
+# PHP-FPM, Apache and Wodby's setup for Matomo but no Matomo: the release named
+# in .matomo-version is installed, then the plugins in plugins/ are added and
+# listed in .app-plugins, so the post-deployment action activates them.
 ARG WODBY_BASE_IMAGE
 FROM ${WODBY_BASE_IMAGE}
 
@@ -13,18 +12,11 @@ COPY --chown=wodby:wodby ${COPY_FROM}/ /tmp/app/
 USER root
 
 RUN set -e; \
-    if [ -f /tmp/app/.matomo-version ]; then \
-        version=$(tr -d ' \t\r\n' < /tmp/app/.matomo-version); \
-        if ! command -v matomo-use-release > /dev/null; then \
-            echo "This Matomo image can't use the version in .matomo-version; update the service to a newer revision" >&2; \
-            exit 1; \
-        fi; \
-        apk add --no-cache -t .gpg gnupg; \
-        matomo-use-release "${version}"; \
-        apk del --purge .gpg; \
-    else \
-        echo "No .matomo-version in the repository, so the build keeps Matomo ${MATOMO_VER}"; \
+    if [ ! -f /tmp/app/.matomo-version ]; then \
+        echo "Add .matomo-version to the repository, naming the Matomo release to run, such as 5.14.2" >&2; \
+        exit 1; \
     fi; \
+    matomo-install-release "$(tr -d ' \t\r\n' < /tmp/app/.matomo-version)"; \
     : > "${APP_ROOT}/.app-plugins"; \
     for dir in /tmp/app/plugins/*/; do \
         [ -d "${dir}" ] || continue; \

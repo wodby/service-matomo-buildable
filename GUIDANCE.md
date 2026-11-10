@@ -1,22 +1,24 @@
 # Buildable Matomo on Wodby
 
-This service is the [matomo](https://github.com/wodby/service-matomo) service with a build: everything in its guidance
-applies, including settings, data, installation and updates. This page covers only what the build adds.
+This service is the [matomo](https://github.com/wodby/service-matomo) service built from the app's repository: its
+guidance applies to settings, data, installation and updates. This page covers what differs.
 
 ## Image
 
-The image is built from the app's Git repository on top of the prebuilt
-[wodby/matomo](https://github.com/wodby/matomo) Apache image of the selected Matomo major. Start the repository from the
-[Matomo boilerplate](https://github.com/wodby/matomo-boilerplate). It holds:
+The image is built from the app's Git repository on top of [wodby/matomo-php](https://github.com/wodby/matomo-php):
+PHP-FPM and Apache with the same Wodby setup as the prebuilt Matomo image, but no Matomo. The service's versions are
+PHP versions. Start the repository from the [Matomo boilerplate](https://github.com/wodby/matomo-boilerplate). It holds:
 
-- `.matomo-version`: the Matomo release to run, such as `5.14.2`. The build downloads it from builds.matomo.org, checks
-  its signature and puts it in place of the image's Matomo with `matomo-use-release`, keeping Wodby's additions to the
-  image. The version must belong to the selected major version. Without the file, the build keeps the image's Matomo.
+- `.matomo-version`: the Matomo release to run, such as `5.14.2`, required. The build installs it with
+  `matomo-install-release`, which downloads it from builds.matomo.org, checks its signature and adds Wodby's parts:
+  the WodbyInstall plugin, the GeoLite database, the `.htaccess` files and the links to the files volume. Matomo 5
+  releases are supported.
 - `plugins/`: the app's own plugins. The build copies each directory into Matomo's `plugins` directory and records its
   name. It fails when a directory has no `plugin.json`, or has the name of one of Matomo's own plugins.
 
-Matomo's version changes only when the repository changes it: new image revisions bring PHP and Apache updates, not a
-new Matomo. Upgrading Matomo means changing `.matomo-version` and deploying; the deployment updates the database.
+Matomo's version changes only when the repository changes it: new image revisions bring PHP, Apache and Wodby's
+scripts, not a new Matomo. Upgrading Matomo means changing `.matomo-version` and deploying; the deployment updates the
+database.
 
 ## Plugins
 
