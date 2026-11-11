@@ -4,7 +4,7 @@ icon: matomo
 title: Matomo (buildable)
 from: matomo
 fromVersionConstraint: "^3.0.0"
-fromVersion: "3.0.1"
+fromVersion: "3.0.2"
 guidance: GUIDANCE.md
 
 labels:
