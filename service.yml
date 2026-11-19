@@ -4,7 +4,7 @@ icon: matomo
 title: Matomo (buildable)
 from: matomo
 fromVersionConstraint: "^3.0.0"
-fromVersion: "3.0.5"
+fromVersion: "3.0.6"
 guidance: GUIDANCE.md
 
 labels:
@@ -15,7 +15,7 @@ labels:
 # repository pins in .matomo-version.
 options:
 - version: '8.4'
-  tag: 8.4-r2
+  tag: 8.4-r4
   default: true
 
 build:
