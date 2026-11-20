@@ -4,7 +4,7 @@ icon: matomo
 title: Matomo (buildable)
 from: matomo
 fromVersionConstraint: "^3.0.0"
-fromVersion: "3.0.6"
+fromVersion: "3.0.7"
 guidance: GUIDANCE.md
 
 labels:
@@ -16,6 +16,7 @@ labels:
 options:
 - version: '8.4'
   tag: 8.4-r4
+  digest: sha256:2972c33ee2f9da1c543b7b32573007911d89f4c1b6f73a46905957e559018151
   default: true
 
 build:
