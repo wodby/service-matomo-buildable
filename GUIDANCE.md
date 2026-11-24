@@ -22,8 +22,8 @@ database.
 
 ## Plugins
 
-After every deployment the **Install or update Matomo** action runs `matomo-update-app`. It installs or updates Matomo as
-the matomo service does, then:
+On every deployment the **Install or update Matomo** action runs `matomo-update-app`, before the new version rolls out
+(on the first deployment, right after the install). It installs or updates Matomo as the matomo service does, then:
 
 - activates every plugin from the repository;
 - deactivates the plugins the repository had at the previous deployment but no longer has. The list of deployed
