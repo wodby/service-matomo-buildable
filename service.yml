@@ -31,12 +31,15 @@ build:
 actions:
 # Installs Matomo on the first deployment and updates its database on later
 # ones, then activates the app repository's plugins and deactivates the ones
-# removed from it.
+# removed from it. Updates run before the new version rolls out: the previous
+# version keeps serving on the updated database. Large log tables can take a
+# while to alter.
 - name: update
   title: Install or update Matomo
   args:
   - matomo-update-app
-  type: post_deploy
+  type: pre_deploy
+  timeoutSeconds: 1800
 
 # The image is built from the app repository on top of wodby/matomo-php.
 workloads:
